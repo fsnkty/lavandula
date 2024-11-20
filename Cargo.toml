@@ -44,7 +44,11 @@ log = { version = "*", features = [
     "max_level_debug",
     "release_max_level_warn",
 ] }
-embed-resource = "3.0.1"
+
+[features]
+dev = [
+    "bevy/dynamic_linking",
+]
 
 [profile.dev]
 opt-level = 1
@@ -58,3 +62,6 @@ opt-level = 3
 codegen-units = 1
 incremental = false
 debug = false
+
+[build-dependencies]
+embed-resource = "3.0.1"

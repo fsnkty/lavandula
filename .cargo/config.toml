@@ -4,7 +4,9 @@ linker = "rust-lld.exe"
 rustdocflags = ["-Clinker=rust-lld.exe"]
 
 [alias]
-ci = "run --package ci --"
+dev = "run --features dev"
+dev-build = "build --features dev"
+release = "build --release"
 
 # https://github.com/bevyengine/bevy/discussions/14531
 [env]
