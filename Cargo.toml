@@ -37,7 +37,6 @@ bevy = { version = "0.14.2", default-features = false, features = [
     #"x11",                 # Linux: Support X11 windowing system
     "zstd",                 # ZSTD compression support in KTX2 files
 ]}
-
 avian2d = "0.1.2"
 leafwing-input-manager = "0.15.1"
 bevy-inspector-egui = "0.27"
@@ -45,6 +44,7 @@ log = { version = "*", features = [
     "max_level_debug",
     "release_max_level_warn",
 ] }
+embed-resource = "3.0.1"
 
 [profile.dev]
 opt-level = 1

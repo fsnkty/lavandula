@@ -15,8 +15,6 @@ fn main() {
                 primary_window: Some(Window {
                     title: "lavandula".to_string(),
                     resolution: WindowResolution::new(1280., 720.).with_scale_factor_override(1.),
-                    // with nothing to draw for the first few frames
-                    // delay going visable till 3 frames elapse
                     // handled by the window controller
                     visible: false,
                     present_mode: PresentMode::AutoVsync,
@@ -24,10 +22,12 @@ fn main() {
                 }),
                 ..default()
             }),
+            // debugging & dev
             WorldInspectorPlugin::new(),
-            window::WindowController,
             debug::DebugHud,
+            
             PhysicsPlugins::default().with_length_unit(20.),
+            window::WindowController,
             world::WorldManagerPlugin,
             player::PlayerManagerPlugin,
         ))
