@@ -1,0 +1,3 @@
+# some performance improvements to build time etc are nighly only
+[toolchain]
+channel = "nightly"

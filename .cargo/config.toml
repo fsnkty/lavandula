@@ -1,0 +1,11 @@
+# apparently the rustc default linker is slow, lld should be much faster
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe"
+rustdocflags = ["-Clinker=rust-lld.exe"]
+
+[alias]
+ci = "run --package ci --"
+
+# https://github.com/bevyengine/bevy/discussions/14531
+[env]
+WGPU_BACKEND = "vk"
