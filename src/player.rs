@@ -4,7 +4,6 @@ use bevy::{
 };
 use avian2d::{math::*, prelude::*};
 use leafwing_input_manager::prelude::*;
-
 pub struct PlayerManagerPlugin;
 impl Plugin for PlayerManagerPlugin {
     fn build(&self, app: &mut App) {
@@ -37,7 +36,6 @@ impl Action {
         let mut input_map = InputMap::default();
         input_map.insert(Self::Jump, KeyCode::Space);
         input_map.insert_dual_axis(Self::Run, KeyboardVirtualDPad::WASD);
-
         input_map
     }
 }
@@ -142,6 +140,7 @@ fn spawn_player(
     commands.spawn(camera);
     commands
         .spawn((
+            Name::new("player"),
             InputManagerBundle::with_map(Action::default_input_map()),
             MaterialMesh2dBundle {
                 mesh: meshes.add(Capsule2d::new(12.5, 20.0)).into(),
@@ -205,19 +204,19 @@ fn player_movement(
 ) {
     let delta_time = time.delta_seconds_f64().adjust_precision();
     let action_state = query.single();
-    for (movement_acceleration, jump_impulse, mut linear_velocity, is_grounded) in
+    for (movement_acceleration, jump_impulse, mut linear_velocity, is_grounded ) in
         &mut controllers
     {
         if action_state.axis_pair(&Action::Run) != Vec2::ZERO {
             let direction = action_state.axis_pair(&Action::Run).x;
             linear_velocity.x += direction * movement_acceleration.0 * delta_time;
-
         }
         if action_state.just_pressed(&Action::Jump) && is_grounded {
             linear_velocity.y = jump_impulse.0;
         }
     }
 }
+
 
 fn update_grounded(
     mut commands: Commands,

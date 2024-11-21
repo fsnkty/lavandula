@@ -2711,8 +2711,10 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "embed-resource",
+ "image",
  "leafwing-input-manager",
  "log",
+ "winit",
 ]
 
 [[package]]

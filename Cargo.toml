@@ -2,6 +2,8 @@
 name = "lavandual"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/fsnkty/lavandula"
+description = "small bevy gamedev playground, only targetting windows msvc"
 
 [dependencies]
 bevy = { version = "0.14.2", default-features = false, features = [
@@ -44,6 +46,8 @@ log = { version = "*", features = [
     "max_level_debug",
     "release_max_level_warn",
 ] }
+winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
+image = { version = "0.25.2", default-features = false }
 
 [features]
 dev = [
