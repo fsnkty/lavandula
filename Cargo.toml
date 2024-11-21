@@ -39,13 +39,16 @@ bevy = { version = "0.14.2", default-features = false, features = [
     #"x11",                 # Linux: Support X11 windowing system
     "zstd",                 # ZSTD compression support in KTX2 files
 ]}
-avian2d = "0.1.2"
+avian2d = "0.1.2" # physics engine plugin
 leafwing-input-manager = "0.15.1"
 bevy-inspector-egui = "0.27"
+
+## can increase performance particularly with wgpu, should be disabled if errors are poor
 log = { version = "*", features = [
     "max_level_debug",
     "release_max_level_warn",
 ] }
+## set explicitly to access outside of bevy ( atm just to set winit window decoration icon )
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 image = { version = "0.25.2", default-features = false }
 
@@ -54,11 +57,12 @@ dev = [
     "bevy/dynamic_linking",
 ]
 
-[profile.dev]
-opt-level = 1
-
+## with bevy dynamic linking this compile time hit is worth it
 [profile.dev.package."*"]
 opt-level = 3
+
+[profile.dev]
+opt-level = 1
 
 [profile.release]
 lto = true
@@ -67,5 +71,6 @@ codegen-units = 1
 incremental = false
 debug = false
 
+## used to embed icon in windows executable
 [build-dependencies]
 embed-resource = "3.0.1"

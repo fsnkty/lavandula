@@ -1,14 +1,9 @@
-use bevy::{
-    diagnostic::*,
-    prelude::*,
-    color::palettes::css::GOLD,
-};
+use bevy::{color::palettes::css::GOLD, diagnostic::*, prelude::*};
 
 pub struct DebugHud;
 impl Plugin for DebugHud {
     fn build(&self, app: &mut App) {
-        app
-            .add_plugins(FrameTimeDiagnosticsPlugin)
+        app.add_plugins(FrameTimeDiagnosticsPlugin)
             .add_systems(Startup, setup_debug_hud)
             .add_systems(Update, update_debug_hud);
     }

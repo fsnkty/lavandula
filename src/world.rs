@@ -8,7 +8,6 @@ impl Plugin for WorldManagerPlugin {
 }
 
 fn setup_world(mut commands: Commands) {
-    // A cube to move around
     commands.spawn((
         Name::new("cubefren"),
         SpriteBundle {
@@ -23,8 +22,6 @@ fn setup_world(mut commands: Commands) {
         RigidBody::Dynamic,
         Collider::rectangle(30.0, 30.0),
     ));
-
-    // Platforms
     commands.spawn((
         SpriteBundle {
             sprite: Sprite {

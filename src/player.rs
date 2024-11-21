@@ -1,14 +1,10 @@
-use bevy::{
-    prelude::*,
-    sprite::MaterialMesh2dBundle
-};
 use avian2d::{math::*, prelude::*};
+use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use leafwing_input_manager::prelude::*;
 pub struct PlayerManagerPlugin;
 impl Plugin for PlayerManagerPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_plugins(InputManagerPlugin::<Action>::default())
+        app.add_plugins(InputManagerPlugin::<Action>::default())
             .add_systems(Startup, spawn_player)
             .add_systems(Update, player_movement)
             .add_systems(
@@ -18,7 +14,8 @@ impl Plugin for PlayerManagerPlugin {
                     player_movement,
                     update_camera,
                     apply_movement_damping,
-                ).chain(),
+                )
+                    .chain(),
             );
     }
 }
@@ -148,13 +145,12 @@ fn spawn_player(
                 transform: Transform::from_xyz(0.0, -100.0, 0.0),
                 ..default()
             },
-            PlayerControllerBundle::new(
-                Collider::capsule(12.5, 20.0)).with_movement(
-                    1250.,
-                    0.92,
-                    400.,
-                    (30. as Scalar).to_radians(),
-                ),
+            PlayerControllerBundle::new(Collider::capsule(12.5, 20.0)).with_movement(
+                1250.,
+                0.92,
+                400.,
+                (30. as Scalar).to_radians(),
+            ),
             Friction::ZERO.with_combine_rule(CoefficientCombine::Min),
             Restitution::ZERO.with_combine_rule(CoefficientCombine::Min),
             ColliderDensity(2.0),
@@ -190,7 +186,6 @@ fn update_camera(
         .lerp(direction, time.delta_seconds() * 8.);
 }
 
-
 /// Responds to [`MovementAction`] events and moves character controllers accordingly.
 fn player_movement(
     time: Res<Time>,
@@ -204,8 +199,7 @@ fn player_movement(
 ) {
     let delta_time = time.delta_seconds_f64().adjust_precision();
     let action_state = query.single();
-    for (movement_acceleration, jump_impulse, mut linear_velocity, is_grounded ) in
-        &mut controllers
+    for (movement_acceleration, jump_impulse, mut linear_velocity, is_grounded) in &mut controllers
     {
         if action_state.axis_pair(&Action::Run) != Vec2::ZERO {
             let direction = action_state.axis_pair(&Action::Run).x;
@@ -217,13 +211,9 @@ fn player_movement(
     }
 }
 
-
 fn update_grounded(
     mut commands: Commands,
-    mut query: Query<
-        (Entity, &ShapeHits, &Rotation, Option<&MaxSlopeAngle>),
-        With<Player>,
-    >,
+    mut query: Query<(Entity, &ShapeHits, &Rotation, Option<&MaxSlopeAngle>), With<Player>>,
 ) {
     for (entity, hits, rotation, max_slope_angle) in &mut query {
         // The character is grounded if the shape caster has a hit with a normal
@@ -235,7 +225,7 @@ fn update_grounded(
                 true
             }
         });
-        
+
         if is_grounded {
             commands.entity(entity).insert(Grounded);
         } else {

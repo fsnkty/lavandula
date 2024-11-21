@@ -1,31 +1,21 @@
-use bevy::{
-    core::FrameCount,
-    prelude::*,
-    window::PrimaryWindow,
-    winit::WinitWindows,
-};
+use bevy::{core::FrameCount, prelude::*, window::PrimaryWindow, winit::WinitWindows};
 use std::io::Cursor;
 use winit::window::Icon;
-
 
 pub struct WindowController;
 impl Plugin for WindowController {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (
-            make_visable,
-            set_window_icon,
-        ));
+        app.add_systems(Update, make_visable)
+            .add_systems(Startup, set_window_icon);
     }
 }
 
-pub fn make_visable(
-    mut window: Query<&mut Window>,
-    frames: Res<FrameCount>,
-) {
+pub fn make_visable(mut window: Query<&mut Window>, frames: Res<FrameCount>) {
     if frames.0 == 3 {
         window.single_mut().visible = true;
     }
 }
+
 fn set_window_icon(
     windows: NonSend<WinitWindows>,
     primary_window: Query<Entity, With<PrimaryWindow>>,
@@ -34,9 +24,7 @@ fn set_window_icon(
     let Some(primary) = windows.get_window(primary_entity) else {
         return;
     };
-    let icon_buf = Cursor::new(include_bytes!(
-        "../build-assets/icon.png"
-    ));
+    let icon_buf = Cursor::new(include_bytes!("../build-assets/icon.png"));
     if let Ok(image) = image::load(icon_buf, image::ImageFormat::Png) {
         let image = image.into_rgba8();
         let (width, height) = image.dimensions();
