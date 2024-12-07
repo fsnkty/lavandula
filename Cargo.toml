@@ -47,7 +47,7 @@ bevy = { version = "0.15.0", default-features = false, features = [
     "zstd", # ZSTD compression support in KTX2 files
 ] }
 avian2d = { git = "https://github.com/Jondolf/avian", branch = "main" } # 3d physics engine plugin
-leafwing-input-manager = "0.15.1"
+leafwing-input-manager = { git = "https://github.com/pcwalton/leafwing-input-manager", branch = "0.15-newer" }
 bevy-inspector-egui = "0.28"
 
 ## can increase performance particularly with wgpu, should be disabled if errors are poor

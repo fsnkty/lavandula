@@ -32,7 +32,7 @@ impl Action {
     fn default_input_map() -> InputMap<Self> {
         let mut input_map = InputMap::default();
         input_map.insert(Self::Jump, KeyCode::Space);
-        input_map.insert_dual_axis(Self::Run, KeyboardVirtualDPad::WASD);
+        input_map.insert_dual_axis(Self::Run, VirtualDPad::wasd());
         input_map
     }
 }
@@ -130,7 +130,7 @@ fn spawn_player(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    commands.spawn((Name::new("camera"), Camera2d::default()));
+    commands.spawn((Name::new("camera"), Camera2d));
     commands
         .spawn((
             Name::new("player"),
