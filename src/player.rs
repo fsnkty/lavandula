@@ -1,5 +1,5 @@
 use avian2d::{math::*, prelude::*};
-use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
+use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 pub struct PlayerManagerPlugin;
 impl Plugin for PlayerManagerPlugin {
@@ -130,21 +130,14 @@ fn spawn_player(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    let mut camera = Camera2dBundle::default();
-    camera.projection.scale = 0.5;
-    camera.transform.translation.x += 1280.0 / 4.0;
-    camera.transform.translation.y += 720.0 / 4.0;
-    commands.spawn(camera);
+    commands.spawn((Name::new("camera"), Camera2d::default()));
     commands
         .spawn((
             Name::new("player"),
             InputManagerBundle::with_map(Action::default_input_map()),
-            MaterialMesh2dBundle {
-                mesh: meshes.add(Capsule2d::new(12.5, 20.0)).into(),
-                material: materials.add(Color::srgb(0.2, 0.7, 0.9)),
-                transform: Transform::from_xyz(0.0, -100.0, 0.0),
-                ..default()
-            },
+            Mesh2d(meshes.add(Capsule2d::new(12.5, 20.0))),
+            MeshMaterial2d(materials.add(Color::srgb(0.2, 0.7, 0.9))),
+            Transform::from_xyz(0.0, -100.0, 0.0),
             PlayerControllerBundle::new(Collider::capsule(12.5, 20.0)).with_movement(
                 1250.,
                 0.92,
@@ -181,9 +174,7 @@ fn update_camera(
     // Here we use the in-game time, to get the elapsed time (in seconds)
     // since the previous update. This avoids jittery movement when tracking
     // the player.
-    camera.translation = camera
-        .translation
-        .lerp(direction, time.delta_seconds() * 8.);
+    camera.translation = camera.translation.lerp(direction, time.delta_secs() * 8.);
 }
 
 /// Responds to [`MovementAction`] events and moves character controllers accordingly.
@@ -197,7 +188,7 @@ fn player_movement(
         Has<Grounded>,
     )>,
 ) {
-    let delta_time = time.delta_seconds_f64().adjust_precision();
+    let delta_time = time.delta_secs_f64().adjust_precision();
     let action_state = query.single();
     for (movement_acceleration, jump_impulse, mut linear_velocity, is_grounded) in &mut controllers
     {
@@ -220,7 +211,7 @@ fn update_grounded(
         // that isn't too steep.
         let is_grounded = hits.iter().any(|hit| {
             if let Some(angle) = max_slope_angle {
-                (rotation * -hit.normal2).angle_between(Vector::Y).abs() <= angle.0
+                (rotation * -hit.normal2).angle_to(Vector::Y).abs() <= angle.0
             } else {
                 true
             }

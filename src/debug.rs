@@ -17,77 +17,36 @@ enum DebugHudText {
 }
 
 pub fn setup_debug_hud(mut commands: Commands) {
-    commands.spawn((
-        TextBundle::from_sections([
-            TextSection::new(
-                "FPS: ",
-                TextStyle {
-                    font_size: 20.,
-                    ..default()
-                },
-            ),
-            TextSection::from_style({
-                TextStyle {
-                    font_size: 20.,
-                    color: GOLD.into(),
-                    ..default()
-                }
-            }),
-        ]),
+    commands.spawn((Text::new("FPS: "),)).with_child((
+        TextSpan::default(),
+        TextColor(GOLD.into()),
         DebugHudText::Fps,
     ));
-    commands.spawn((
-        TextBundle::from_sections([
-            TextSection::new(
-                "\nFrame Time: ",
-                TextStyle {
-                    font_size: 20.,
-                    ..default()
-                },
-            ),
-            TextSection::from_style({
-                TextStyle {
-                    font_size: 20.,
-                    color: GOLD.into(),
-                    ..default()
-                }
-            }),
-        ]),
+    commands.spawn((Text::new("Frame Time: "),)).with_child((
+        TextSpan::default(),
+        TextColor(GOLD.into()),
         DebugHudText::FrameTime,
     ));
-    commands.spawn((
-        TextBundle::from_sections([
-            TextSection::new(
-                "\n\nVSYNC mode: ",
-                TextStyle {
-                    font_size: 20.,
-                    ..default()
-                },
-            ),
-            TextSection::from_style({
-                TextStyle {
-                    font_size: 20.,
-                    color: GOLD.into(),
-                    ..default()
-                }
-            }),
-        ]),
+    commands.spawn((Text::new("VSYNC mode: "),)).with_child((
+        TextSpan::default(),
+        TextColor(GOLD.into()),
         DebugHudText::VSync,
     ));
 }
 
 fn update_debug_hud(
-    mut textquery: Query<(&mut Text, &DebugHudText)>,
+    query: Query<(Entity, &DebugHudText)>,
+    mut writer: TextUiWriter,
     diagnostics: Res<DiagnosticsStore>,
     windows: Query<&Window>,
 ) {
-    for (mut text, e) in textquery.iter_mut() {
+    for (entity, e) in query.iter() {
         use DebugHudText::*;
         match e {
             Fps => {
                 if let Some(fps) = diagnostics.get(&FrameTimeDiagnosticsPlugin::FPS) {
                     if let Some(value) = fps.smoothed() {
-                        text.sections[1].value = format!("{value:.0}");
+                        *writer.text(entity, 1) = format!("{value:.0}");
                     }
                 }
             }
@@ -96,15 +55,14 @@ fn update_debug_hud(
                     diagnostics.get(&FrameTimeDiagnosticsPlugin::FRAME_TIME)
                 {
                     if let Some(frame_time_smoothed) = frame_time_diagnostic.smoothed() {
-                        text.sections[1].value = format!("{frame_time_smoothed:.2}");
+                        *writer.text(entity, 1) = format!("{frame_time_smoothed:.2} ms");
                     }
                 }
             }
             VSync => {
-                let Ok(window) = windows.get_single() else {
-                    continue;
-                };
-                text.sections[1].value = format!("{0:?}", window.present_mode)
+                if let Ok(window) = windows.get_single() {
+                    *writer.text(entity, 1) = format!("{:?}", window.present_mode);
+                }
             }
         }
     }
